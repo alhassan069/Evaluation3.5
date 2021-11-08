@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Cart</title>
+    <style>
+        #navbar {
+            display: flex;
+            justify-content: space-between;
+            padding-left: 4%;
+            padding-right: 4%;
+            border: solid 1px black;
+            text-decoration: none;
+        }
+
+        #options {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        input {
+            font-size: small;
+        }
+
+        #options h3 {
+            padding-left: 50px;
+            padding-right: 10px;
+        }
+
+        .gtc{
+            padding-left: 50px;
+            padding-right: 50px;
+            margin-top: 1%;
+            /* width: 10%; */
+            background-color: green;
+            color: white;
+        }
+
+        img {
+            width: 100%;
+        }
+
+        #products {
+            display: grid;
+            grid-template-columns: repeat(4, 25%);
+            grid-gap: 20px;
+            justify-content: center;
+            padding: 5%;
+        }
+
+        #products div {
+            border: 1px solid black;
+            border-radius: 5px;
+        }
+
+        .middleText {
+            width: 90%;
+            font-size: larger;
+            margin: auto;
+        }
+
+        .atc {
+            width: 30%;
+            margin-left: 34.5%;
+            margin-bottom: 1%;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar">
+        <h3><a href="index.html">Home</a></h3>
+
+        <div id="options">
+            <h3><a href="login.html">Login</a></h3>
+            <h3><a href="signup.html">Signup</a></h3>
+            <h3><a href="menu.html">Menu</a></h3>
+
+        </div>
+    </div>
+    <h1>Cart</h1>
+    <div id="subBar"><button id="pO" class="gtc">PLACE ORDER!!!</button></div>
+
+    <div id="products"></div>
+</body>
+<script>
+    // 1. get the data from localstorage
+
+    let parent = document.getElementById("products");
+    let ssb = document.getElementById("subBar");
+
+    let cart = JSON.parse(localStorage.getItem("cart"));
+    // console.log(cart);
+    let total = 0;
+
+    function showProducts() {
+
+        cart.forEach(function (product) {
+            // console.log(product.name);
+
+
+            let div = document.createElement("div");
+
+            let img = document.createElement("img");
+            img.src = product.image;
+
+            let product_price = document.createElement("p");
+            product_price.textContent = "₹" + product.price;
+            total = total + product.price;
+            product_price.setAttribute("class", "middleText");
+
+            let product_name = document.createElement("p");
+            product_name.textContent = product.name;
+            product_name.setAttribute("class", "middleText");
+
+
+            div.append(img, product_name, product_price,);
+
+            parent.append(div);
+
+        });
+
+
+    };
+    let count = 0;
+    showProducts();
+    let total_div = document.createElement("p");
+    total_div.innerText = "Total amount: ₹" + total + "/-";
+    ssb.appendChild(total_div);
+    // console.log(total);
+    let placeO = document.getElementById("pO");
+    placeO.onclick = function placeOrder() {
+
+        setTimeout(function(){ alert("Your order is accepted."); }, 0);
+        setTimeout(function(){ alert("Your order is being cooked."); }, 3000);
+        setTimeout(function(){ alert("Your order is ready."); }, 8000);
+        setTimeout(function(){ alert("Your order is out for delivery."); }, 10000);
+        setTimeout(function(){ alert("Order Delivered."); }, 12000);
+        setTimeout(function(){ window.location.href = "index.html" }, 15000);
+ 
+    }
+
+
+</script>
+
+</html>

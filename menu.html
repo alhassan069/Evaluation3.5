@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <style>
+        #navbar {
+            display: flex;
+            justify-content: space-between;
+            padding-left: 4%;
+            padding-right: 4%;
+            border: solid 1px black;
+            text-decoration: none;
+        }
+
+        #options {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        input {
+            font-size: small;
+        }
+
+        #options h3 {
+            padding-left: 50px;
+            padding-right: 10px;
+        }
+        .gtc {
+            padding-left: 50px;
+            padding-right: 10px;
+            margin-top: 5%;
+        }
+
+        img {
+            width: 100%;
+        }
+
+        #container {
+            display: grid;
+            grid-template-columns: repeat(4, 25%);
+            grid-gap: 20px;
+            justify-content: center;
+            padding: 5%;
+        }
+
+        #container div {
+            border: 1px solid black;
+            border-radius: 5px;
+        }
+
+        .middleText {
+            width: 90%;
+            font-size: larger;
+            margin: auto;
+        }
+
+        .atc {
+            width: 30%;
+            margin-left: 34.5%;
+            margin-bottom: 1%;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar">
+        <h3><a href="index.html">Home</a></h3>
+
+        <div id="options">
+            <h3><a href="login.html">Login</a></h3>
+            <h3><a href="signup.html">Signup</a></h3>
+            <h3><a href="menu.html">Menu</a></h3>
+            <a href="cart.html" class="gtc"><button>Go to cart</button></a>
+
+        </div>
+    </div>
+
+    <div id="container"></div>
+
+</body>
+
+<script>
+    if (localStorage.getItem("cart") === null) {
+        localStorage.setItem("cart", JSON.stringify([]));
+    }
+    async function getData(url) {
+        let res = await fetch(url);
+        let data = await res.json();
+
+        return data.meals;
+    }
+
+    function appendData(data, container) {
+        for (let i = 0; i < data.length; i++) {
+            let el = data[i];
+            let div = document.createElement('div');
+            let p = document.createElement('p');
+
+            p.innerText = el.strMeal;
+            p.setAttribute("class", "middleText");
+
+            let img = document.createElement("img");
+
+            img.src = el.strMealThumb;
+
+            let cos = document.createElement("p");
+            cos.innerText = "₹" + (Number(el.idMeal) % 11) * 15;
+            cos.setAttribute("class", "middleText")
+
+            let atc = document.createElement("button");
+            atc.innerText = "Add to cart";
+            atc.setAttribute("class", "atc");
+
+            div.append(img, p, cos, atc);
+
+            container.append(div);
+
+            atc.onclick = function detailedRecepe() {
+
+                let name = el.strMeal;
+                let image = el.strMealThumb;
+                let price = el.idMeal;
+                price = (Number(price) % 11) * 15;
+
+
+                let obj = {
+                    name,
+                    image,
+                    price,
+                }
+
+                // console.log(obj);
+                addToCart(obj);
+            };
+        }
+    }
+
+    function addToCart(p) {
+        let products_cart = JSON.parse(localStorage.getItem("cart"));
+
+        products_cart.push(p);
+
+        localStorage.setItem("cart", JSON.stringify(products_cart));
+        console.log(products_cart);
+    }
+
+    function search() {
+        let container = document.getElementById("container");
+        container.innerHTML = null;
+
+        let gt = getData(`https://www.themealdb.com/api/json/v1/1/filter.php?a=indian`);
+
+
+        gt.then((res) => {
+
+
+            appendData(res, container);
+
+            // console.log(res);
+        })
+            .catch((err) => {
+                console.log(err);
+            });
+        // window.location.href = "search.html";
+
+    }
+    search();
+</script>
+
+</html>
